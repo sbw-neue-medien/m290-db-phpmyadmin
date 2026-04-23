@@ -1,0 +1,34 @@
+name: challange
+
+services:
+  mariadb:
+    image: mariadb:latest
+    restart: unless-stopped
+    networks:
+      - challange_network
+    volumes:
+      - data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mariadb
+
+    networks:
+      - challange_network
+    ports:
+      - "8080:80"
+    depends_on:
+      - mariadb
+volumes:
+  data:
+
+networks:
+  challange_network:
+    driver: bridge
